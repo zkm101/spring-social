@@ -1,0 +1,178 @@
+<project name="Spring Facebook MVC Framework" default="dist" basedir=".">
+
+  <!-- 
+  ===================================================================
+  Init Target
+  ===================================================================
+  -->
+  <target name="init">
+
+    <property environment="env"/>
+
+    <tstamp>
+      <format property="build.time.start" pattern="MM/dd/yyyy hh:mm aa"/>
+    </tstamp>
+
+    <!-- Override build version if one was passed in -->
+    <condition property="version" value="${buildVersion}">
+      <isset property="buildVersion"/>
+    </condition>
+
+    <property file="build.props"/>
+    <mkdir dir="${build}"/>
+
+    <echo>Building version ${version}</echo>
+
+    <!-- Check for Java 1.5 -->
+    <fail>
+      <condition>
+        <not><equals arg1="1.5" arg2="${ant.java.version}"/></not>
+      </condition>
+
+      Java 1.5.x is required to build this project!
+    </fail>
+
+  </target>
+
+  <!-- 
+  ===================================================================
+  Compile Target
+  ===================================================================
+  -->
+  <target name="compile" depends="init" description="Compiles project to build area">
+    <!-- Compile the java code from ${src} into ${build} -->
+    <javac 
+       srcdir="${src.java}" 
+       destdir="${build}" 
+       debug="${debug}"
+       source="1.5" target="1.5">
+
+      <classpath> <!-- Loads all dependencies from the src.lib dir -->
+	<fileset dir="${src.lib}" casesensitive="no"/>
+      </classpath>
+
+    </javac>
+  </target>
+
+  <!-- 
+  ===================================================================
+  Create Distribution Target
+  ===================================================================
+  -->
+  <target name="dist" depends="compile" 
+   description="Creates the project distribution">
+
+    <!-- Create the distribution directory -->
+    <mkdir dir="${dist.lib}"/>
+    
+    <jar jarfile="${dist.lib}/${dist.jar}" basedir="${build}">
+
+      <manifest>
+        <attribute name="Built-By" value="${user.name}"/>
+        <section name="get-your-stuff">
+          <attribute name="Specification-Title" value="Spring Facebook Application Framework"/>
+          <attribute name="Specification-Version" value="${version}"/>
+          <attribute name="Specification-Vendor" value="Scott Rossillo"/>
+          <attribute name="Implementation-Title" value="Rossillo.net"/>
+          <attribute name="Implementation-Version" value="${version} (${TODAY})"/> 
+          <attribute name="Implementation-Vendor" value="Scott Rossillo"/>
+        </section>
+      </manifest>
+
+    </jar>
+
+  </target>
+
+  <!-- 
+  ===================================================================
+  Package this project
+  ===================================================================
+  -->
+  <target name="package" depends="dist"
+          description="Packages this project for distribution">
+
+    <!-- Check for required params -->
+    <fail>
+      <condition>
+        <not><isset property="artifactsDir"/></not>
+      </condition>
+
+	Parameter artifactsDir is required to package this ${project.name.short}!
+    </fail>
+
+    <echo>Packaging ${project.name.short} ${version}</echo>
+    <property name="tar.file" value="${dist.base}/${project.name.short}-${version}.tar.gz"/>
+
+    <tar tarfile="${tar.file}" compression="gzip"> 
+      <tarfileset dir="${dist.base}" mode="664">
+        <include name="jrwebsite/**"/>
+      </tarfileset> 
+    </tar>
+
+    <copy todir="${artifactsDir}" file="${tar.file}"/>
+  </target>
+
+  <!-- 
+  ===================================================================
+  Clean target
+  ===================================================================
+  -->
+  <target name="clean" depends="init" description="Removes build and distribution files">
+    <!-- Delete the ${build} and ${dist} directory trees -->
+    <delete dir="${build}"/>
+    <delete dir="${dist.base}"/>
+  </target>
+
+  <!-- 
+  ===================================================================
+  Documentation Target
+  ===================================================================
+  -->
+  <target name="doc" depends="init" description="Creates JavaDoc API">
+
+    <mkdir dir="${dist.doc}"/>
+    <!-- Copy source files -->
+<!--
+    <copy todir="${dist.doc}">
+      <fileset dir="${src.doc}" />
+    </copy>
+-->
+
+    <!--
+    <style basedir="${src.doc}" destdir="${dist.doc}" style="${src.doc}/styles/release-notes.xsl"/>
+    -->
+
+    <javadoc packagenames="net.*"
+             sourcepath="${src.java}"
+             destdir="${doc.dir}"
+             author="true"
+             version="true"
+             windowtitle="Spring Facebook API">
+    
+      <classpath>
+	 	<fileset dir="${src.lib}"/>
+      </classpath>
+
+      <!-- link href="http://docs.jr.com/docs/Java/1.4.2/docs/api/"/> -->
+      <link href="http://static.springframework.org/spring/docs/2.5.x/api/" />
+	  <link href="http://java.sun.com/j2se/1.5.0/docs/api/" />
+	  <link href="http://java.sun.com/j2ee/1.4/docs/api/" />
+
+      <header>Generated ${build.time.start}</header>
+
+      <doctitle><![CDATA[<h1>Spring Facebook API</h1>]]></doctitle>
+      <bottom><![CDATA[
+        <i>
+        Copyright &#169; 2007 Scott Rossillo, All Rights Reserved.
+        </i>
+        ]]>
+      </bottom>
+
+    </javadoc>
+
+
+  </target>
+
+
+</project>
+

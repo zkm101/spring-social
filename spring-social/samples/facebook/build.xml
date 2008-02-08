@@ -1,0 +1,81 @@
+<project name="Facebook Sample Application" default="dist" basedir=".">
+
+  <!-- 
+  ===================================================================
+  Init Target
+  ===================================================================
+  -->
+  <target name="init">
+
+    <property environment="env"/>
+
+    <tstamp>
+      <format property="build.time.start" pattern="MM/dd/yyyy hh:mm aa"/>
+    </tstamp>
+
+    <property file="build.props"/>
+    <mkdir dir="${build}"/>
+
+    <echo>Building version ${version}</echo>
+
+    <!-- Check for Java 1.5 -->
+    <fail>
+      <condition>
+        <not><equals arg1="1.5" arg2="${ant.java.version}"/></not>
+      </condition>
+
+      Java 1.5.x is required to build this project!
+    </fail>
+
+  </target>
+
+  <!-- 
+  ===================================================================
+  Compile Target
+  ===================================================================
+  -->
+  <target name="compile" depends="init" description="Compiles project to build area">
+    <!-- Compile the java code from ${src} into ${build} -->
+    <javac 
+       srcdir="${src.java}" 
+       destdir="${build}" 
+       debug="${debug}"
+       source="1.5" target="1.5">
+
+      <classpath>
+			<fileset dir="${src.lib}" casesensitive="no"/>
+      </classpath>
+
+    </javac>
+  </target>
+
+  <!-- 
+  ===================================================================
+  Create Distribution Target
+  ===================================================================
+  -->
+  <target name="war" depends="compile" 
+   description="Creates this sample web application archive (war)">
+
+    <!-- make the war (web archive) -->
+    <war destfile="facebook.war" webxml="etc/web.xml">
+		<classes dir="build/" />
+		<lib dir="${src.lib}" includes="spring-social.jar">
+		</lib>
+		<fileset dir="src/webapp" />
+	</war>
+
+  </target>
+
+  <!-- 
+  ===================================================================
+  Clean target
+  ===================================================================
+  -->
+  <target name="clean" depends="init" description="Removes build and distribution files">
+    <!-- Delete the ${build} and ${dist} directory trees -->
+    <delete dir="${build}"/>
+    <delete dir="${dist.base}"/>
+  </target>
+
+</project>
