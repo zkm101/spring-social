@@ -1,12 +1,12 @@
 package net.springsocial.web.servlet.handler;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.web.servlet.ModelAndView;
-
 import net.springsocial.context.FacebookConfiguration;
-import net.springsocial.context.FacebookContextAware;
-import net.springsocial.web.servlet.http.FacebookHttpServletRequest;
+
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.facebook.api.FacebookRestClient;
 
@@ -15,10 +15,11 @@ import com.facebook.api.FacebookRestClient;
  * all Facebook requests.
  * 
  * @author Scott Rossillo
+ * 
+ * @deprecated Use {@link FacebookRequestContextHandler} instead
  *
  */
-public final class FacebookSessionHandler extends FacebookHandlerInterceptorAdapter 
-		implements FacebookContextAware {
+public final class FacebookSessionHandler extends HandlerInterceptorAdapter  {
 
 	private FacebookConfiguration facebookConfiguration;
 	
@@ -37,7 +38,7 @@ public final class FacebookSessionHandler extends FacebookHandlerInterceptorAdap
 	 * @see net.springsocial.web.servlet.handler.FacebookHandlerInterceptorAdapter#postHandle(net.springsocial.web.servlet.http.FacebookHttpServletRequest, javax.servlet.http.HttpServletResponse, java.lang.Object, org.springframework.web.servlet.ModelAndView)
 	 */
 	@Override
-	public void postHandle(FacebookHttpServletRequest request,
+	public void postHandle(HttpServletRequest request,
 			HttpServletResponse response, Object handler, ModelAndView mav)
 			throws Exception {
 		
@@ -53,14 +54,14 @@ public final class FacebookSessionHandler extends FacebookHandlerInterceptorAdap
 	 * @see net.springsocial.web.servlet.handler.FacebookHandlerInterceptorAdapter#preHandle(net.springsocial.web.servlet.http.FacebookHttpServletRequest, javax.servlet.http.HttpServletResponse, java.lang.Object)
 	 */
 	@Override
-	public boolean preHandle(FacebookHttpServletRequest request,
+	public boolean preHandle(HttpServletRequest request,
 			HttpServletResponse response, Object handler) throws Exception {
 	
 		String apiKey = facebookConfiguration.getApiKey();
 		String apiSecret = facebookConfiguration.getSecret();
 		
-		String authToken = request.getAuthToken();
-		String sessionKey = request.getSessionKey();
+		String authToken = null; //request.getAuthToken();
+		String sessionKey = null; // request.getSessionKey();
 		
 		FacebookRestClient facebookClient = null;
 		

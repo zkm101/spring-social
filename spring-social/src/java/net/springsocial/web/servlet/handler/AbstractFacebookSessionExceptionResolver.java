@@ -4,7 +4,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.springsocial.context.FacebookConfiguration;
-import net.springsocial.context.FacebookContextAware;
 import net.springsocial.context.support.FacebookSessionException;
 
 import org.springframework.core.Ordered;
@@ -20,7 +19,7 @@ import com.facebook.api.FacebookException;
  *
  */
 public abstract class AbstractFacebookSessionExceptionResolver implements
-		HandlerExceptionResolver, FacebookContextAware, Ordered {
+		HandlerExceptionResolver, Ordered {
 
 	protected FacebookConfiguration facebookConfiguration;
 	private int order;
