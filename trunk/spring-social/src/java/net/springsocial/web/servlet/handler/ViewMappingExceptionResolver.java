@@ -4,7 +4,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import net.springsocial.context.FacebookConfiguration;
-import net.springsocial.context.FacebookContextAware;
 
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
@@ -17,8 +16,7 @@ import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
  *
  */
 public class ViewMappingExceptionResolver 
-		extends SimpleMappingExceptionResolver 
-		implements FacebookContextAware {
+		extends SimpleMappingExceptionResolver  {
 
 	protected FacebookConfiguration facebookConfiguration;
 	

@@ -3,10 +3,7 @@ package net.springsocial.context;
 
 import java.io.Serializable;
 
-
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Required;
-import org.springframework.beans.factory.config.BeanPostProcessor;
 
 /**
  * Provides a Facebook application configuration bean intended for use inside
@@ -18,7 +15,7 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
  * @author Scott Rossillo
  *
  */
-public class FacebookConfiguration implements Serializable, BeanPostProcessor {
+public class FacebookConfiguration implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -166,34 +163,6 @@ public class FacebookConfiguration implements Serializable, BeanPostProcessor {
 	 */
 	public void setGoogleAnalyticsAccountId(String googleAnalyticsAccountId) {
 		this.googleAnalyticsAccountId = googleAnalyticsAccountId;
-	}
-
-	/**
-	 * Sets a reference to this Facebook configuration on the given bean if
-	 * it implements {@link FacebookContextAware}.
-	 * 
-	 * @see org.springframework.beans.factory.config.BeanPostProcessor#postProcessBeforeInitialization(java.lang.Object, java.lang.String)
-	 */
-	public Object postProcessBeforeInitialization(Object bean, String name)
-			throws BeansException {
-
-		if(FacebookContextAware.class.isAssignableFrom(bean.getClass())) {
-			( (FacebookContextAware) bean ).setFacebookConfiguration(this);
-		}
-
-		return bean;
-
-	}
-
-	/**
-	 * Returns the given bean, unmodified.
-	 * 
-	 * @see org.springframework.beans.factory.config.BeanPostProcessor#postProcessAfterInitialization(java.lang.Object, java.lang.String)
-	 */
-	public Object postProcessAfterInitialization(Object bean, String name)
-			throws BeansException {
-
-		return bean;
 	}
 
 }

@@ -22,15 +22,15 @@ public interface FacebookController {
 	 * @return <code>true</code> if this controller requires a facebook session;
 	 * <code>false</code> otherwise.
 	 */
-	public abstract boolean isRequireFacebookSession();
+	public abstract boolean isFacebookSessionRequired();
 
 	/**
 	 * Sets whether or not this controller requires a Facebook session.
 	 * 
-	 * @param requireFacebookSession <code>true</code> to require a Facebook
+	 * @param facebookSessionRequired <code>true</code> to require a Facebook
 	 * session; <code>false</code> otherwise
 	 */
-	public abstract void setRequireFacebookSession(
-			boolean requireFacebookSession);
+	public abstract void setFacebookSessionRequired(
+			boolean facebookSessionRequired);
 
 }
